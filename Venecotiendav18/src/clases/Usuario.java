@@ -1,8 +1,8 @@
 package clases;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import singleton.Conexion;
 
@@ -28,28 +28,53 @@ public class Usuario {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 idUsuario = rs.getInt("id_usuario");
-                JOptionPane.showMessageDialog(null, "Inicio de sesión exitoso. Bienvenido, " + nombre);
+                JOptionPane.showMessageDialog(null, "Bienvenido, " + nombre);
                 return true;
             } else {
-                JOptionPane.showMessageDialog(null, "Credenciales incorrectas.");
+                JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos.");
                 return false;
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos: " + e.getMessage());
             return false;
         }
     }
 
     public void cerrarSesion() {
+        singleton.Sesion.getInstancia().cerrarSesion();
         JOptionPane.showMessageDialog(null, "Sesión cerrada.");
     }
 
     // Getters y Setters
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    public String getPass() { return pass; }
-    public void setPass(String pass) { this.pass = pass; }
-    public String getRol() { return rol; }
-    public void setRol(String rol) { this.rol = rol; }
-    public int getIdUsuario() { return idUsuario; }
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
 }
