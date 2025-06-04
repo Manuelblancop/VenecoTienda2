@@ -45,6 +45,7 @@ public class Usuario {
         JOptionPane.showMessageDialog(null, "Sesión cerrada.");
     }
 
+<<<<<<< Updated upstream
     // Getters y Setters
     public String getNombre() {
         return nombre;
@@ -77,4 +78,13 @@ public class Usuario {
     public void setIdUsuario(int idUsuario) {
         this.idUsuario = idUsuario;
     }
+=======
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getPass() { return pass; }
+    public void setPass(String pass) { this.pass = pass; }
+    public String getRol() { return rol; }
+    public void setRol(String rol) { this.rol = rol; }
+    public int getIdUsuario() { return idUsuario; }
+>>>>>>> Stashed changes
 }
