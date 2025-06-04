@@ -15,8 +15,8 @@ public class Sesion {
         return instancia;
     }
 
-    public void iniciarSesion(Usuario usuario) {
-        this.usuarioActual = usuario;
+    public void iniciarSesion(Usuario usuarioLogueado) {
+        this.usuarioActual = usuarioLogueado;
     }
 
     public void cerrarSesion() {

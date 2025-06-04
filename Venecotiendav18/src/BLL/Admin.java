@@ -1,9 +1,12 @@
-package clases;
+package BLL;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import javax.swing.JOptionPane;
+import DLL.ControllerAdmin;
 import singleton.Conexion;
 
 public class Admin extends Usuario {
@@ -12,6 +15,10 @@ public class Admin extends Usuario {
     public Admin(String nombre, String pass, String rol, int iD) {
         super(nombre, pass, rol);
         ID = iD;
+    }
+
+    public List<Productos> verProductos() {
+        return ControllerAdmin.verProductos();
     }
 
     public void verPedidosAsignados() {
@@ -39,67 +46,23 @@ public class Admin extends Usuario {
         }
     }
 
-    public void verProductos() {
-        try {
-            Connection conexion = Conexion.getInstance().getConnection();
-            String query = "SELECT id_producto, nombre, descripcion, precio FROM producto";
-            PreparedStatement stmt = conexion.prepareStatement(query);
-            ResultSet rs = stmt.executeQuery();
-            StringBuilder sb = new StringBuilder("Productos:\n");
-            boolean hayProductos = false;
-            while (rs.next()) {
-                hayProductos = true;
-                sb.append("ID: ").append(rs.getInt("id_producto"))
-                  .append(", Nombre: ").append(rs.getString("nombre"))
-                  .append(", Descripción: ").append(rs.getString("descripcion"))
-                  .append(", Precio: $").append(rs.getDouble("precio"))
-                  .append("\n");
-            }
-            if (hayProductos) {
-                JOptionPane.showMessageDialog(null, sb.toString());
-            } else {
-                JOptionPane.showMessageDialog(null, "No hay productos disponibles. Por favor, agrega productos a la base de datos.");
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al cargar productos: " + e.getMessage());
-        }
-    }
-
     public void verEstadoPedidos() {
-        int idPedido = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese el ID del pedido:"));
+        String inputId = JOptionPane.showInputDialog(null, "Ingrese el ID del pedido:");
         try {
-            Connection conexion = Conexion.getInstance().getConnection();
-            String query = "SELECT productos FROM pedido WHERE id_pedido = ?";
-            PreparedStatement stmt = conexion.prepareStatement(query);
-            stmt.setInt(1, idPedido);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                JOptionPane.showMessageDialog(null, "Pedido ID " + idPedido + ": " + rs.getString("productos"));
-            } else {
-                JOptionPane.showMessageDialog(null, "Pedido no encontrado.");
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al buscar pedido: " + e.getMessage());
+            int idPedido = Integer.parseInt(inputId);
+            String resultado = ControllerAdmin.verEstadoPedidos(idPedido);
+            JOptionPane.showMessageDialog(null, resultado);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Por favor, ingrese un ID válido.");
         }
     }
 
     public void eliminarProducto() {
-        int idProducto = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese el ID del producto a eliminar:"));
+        String inputId = JOptionPane.showInputDialog(null, "Ingrese el ID del producto a eliminar:");
         try {
-            Connection conexion = Conexion.getInstance().getConnection();
-            String query = "DELETE FROM producto WHERE id_producto = ?";
-            PreparedStatement stmt = conexion.prepareStatement(query);
-            stmt.setInt(1, idProducto);
-            int rows = stmt.executeUpdate();
-            if (rows > 0) {
-                JOptionPane.showMessageDialog(null, "Producto eliminado.");
-            } else {
-                JOptionPane.showMessageDialog(null, "Producto no encontrado.");
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al eliminar producto: " + e.getMessage());
+            int idProducto = Integer.parseInt(inputId);
+            String resultado = ControllerAdmin.eliminarProducto(idProducto);
+            JOptionPane.showMessageDialog(null, resultado);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Por favor, ingrese un ID válido.");
         }
@@ -109,20 +72,12 @@ public class Admin extends Usuario {
         String nuevoNombre = JOptionPane.showInputDialog(null, "Nuevo nombre:");
         String nuevaPass = JOptionPane.showInputDialog(null, "Nueva contraseña:");
         if (nuevoNombre != null && nuevaPass != null && !nuevoNombre.isEmpty() && !nuevaPass.isEmpty()) {
-            try {
-                Connection conexion = Conexion.getInstance().getConnection();
-                String query = "UPDATE usuario SET nombre_usuario = ?, password = ? WHERE id_usuario = ?";
-                PreparedStatement stmt = conexion.prepareStatement(query);
-                stmt.setString(1, nuevoNombre);
-                stmt.setString(2, nuevaPass);
-                stmt.setInt(3, getIdUsuario());
-                stmt.executeUpdate();
+            String resultado = ControllerAdmin.editarPerfil(getIdUsuario(), nuevoNombre, nuevaPass);
+            if (resultado.equals("Perfil actualizado.")) {
                 setNombre(nuevoNombre);
                 setPass(nuevaPass);
-                JOptionPane.showMessageDialog(null, "Perfil actualizado.");
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, "Error al actualizar perfil: " + e.getMessage());
             }
+            JOptionPane.showMessageDialog(null, resultado);
         } else {
             JOptionPane.showMessageDialog(null, "Nombre y contraseña no pueden estar vacíos.");
         }
@@ -163,4 +118,5 @@ public class Admin extends Usuario {
     }
 
     public int getID() { return ID; }
-    public void setID(int iD) { ID = iD; }}
+    public void setID(int iD) { ID = iD; }
+}
