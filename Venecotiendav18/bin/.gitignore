@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 /BLL/
 /DLL/
 /GUI/
@@ -5,3 +6,8 @@
 /enums/
 /singleton/
 /venecotienda/
+=======
+/venecotienda/
+/GUI/
+/DLL/
+>>>>>>> Stashed changes
