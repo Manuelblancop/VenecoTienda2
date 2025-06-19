@@ -1,18 +1,12 @@
 package GUI;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import DLL.AuthController;
 
-public class Login extends JFrame {
+import java.awt.*;
+import java.awt.event.*;
+
+public class LoginRegisterFrame extends JFrame {
     private JTextField loginUserField;
     private JPasswordField loginPasswordField;
     private JComboBox<String> roleComboBox;
@@ -20,7 +14,7 @@ public class Login extends JFrame {
     private JPasswordField registerPasswordField;
     private JTextField registerEmailField;
 
-    public Login() {
+    public LoginRegisterFrame() {
         setTitle("Login y Registro");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -98,7 +92,7 @@ public class Login extends JFrame {
 
         registerButton.addActionListener(e -> handleRegister());
 
-        // Agregar paneles
+        // Agregar paneles al tabbedPane
         tabbedPane.addTab("Iniciar sesión", loginPanel);
         tabbedPane.addTab("Registrarse", registerPanel);
 
@@ -114,7 +108,7 @@ public class Login extends JFrame {
             return;
         }
 
-        //Validaciones
+        // Aquí usarías tu clase Login para validar
         boolean loginExitoso = AuthController.login(username, password);
         if (loginExitoso) {
             JOptionPane.showMessageDialog(this, "Login exitoso");
@@ -148,3 +142,26 @@ public class Login extends JFrame {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

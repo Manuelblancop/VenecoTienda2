@@ -1,12 +1,14 @@
 package venecotienda;
 
 import javax.swing.SwingUtilities;
-import GUI.LoginRegisterFrame;
+import GUI.Login;
+
+
 
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            LoginRegisterFrame loginFrame = new LoginRegisterFrame();
+        	Login loginFrame = new Login();
             loginFrame.setVisible(true);
         });
     }
