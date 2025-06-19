@@ -95,7 +95,7 @@ public class Login extends JFrame {
         JButton registerButton = new JButton("Registrarse");
         registerButton.setBounds(150, 150, 130, 30);
         registerPanel.add(registerButton);
-
+///////////////////////////////////////////////////////////////////// /Validaciones
         registerButton.addActionListener(e -> handleRegister());
 
         // Agregar paneles
@@ -114,7 +114,7 @@ public class Login extends JFrame {
             return;
         }
 
-        //Validaciones
+        //////////////////////////////////////////////////////////////////////// Validaciones
         boolean loginExitoso = AuthController.login(username, password);
         if (loginExitoso) {
             JOptionPane.showMessageDialog(this, "Login exitoso");
@@ -122,7 +122,7 @@ public class Login extends JFrame {
             JOptionPane.showMessageDialog(this, "Credenciales incorrectas", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    //////////////////////////////////////////////////////////////////////// Registro
     private void handleRegister() {
         String username = registerUserField.getText().trim();
         String password = new String(registerPasswordField.getPassword());
@@ -148,3 +148,4 @@ public class Login extends JFrame {
     }
 
 }
+
