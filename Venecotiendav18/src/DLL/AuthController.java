@@ -71,7 +71,12 @@ public class AuthController {
     }
 
     public static String verificarRol(Connection conexion, int idUsuario) throws SQLException {
+<<<<<<< Updated upstream
         if (existeEnTabla(conexion, "admin", "Usuario_id_usuario", idUsuario)) return "admin";
+=======
+        if (existeEnTabla(conexion, "admin", "fk_usuario", idUsuario)) return "admin";
+        if (existeEnTabla(conexion, "admin", "fk_usuario", idUsuario)) return "admin";
+>>>>>>> Stashed changes
         if (existeEnTabla(conexion, "empleado", "fk_usuario", idUsuario)) return "empleado";
         if (existeEnTabla(conexion, "repartidor", "fk_usuario", idUsuario)) return "repartidor";
         if (existeEnTabla(conexion, "cliente", "fk_usuario", idUsuario)) return "cliente";

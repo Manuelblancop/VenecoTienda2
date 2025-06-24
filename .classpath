@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+<<<<<<< Updated upstream
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+=======
+	<classpathentry kind="src" path="Venecotiendav18/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+>>>>>>> Stashed changes
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< Updated upstream
 	<classpathentry kind="src" path="Venecotiendav18/src"/>
+=======
+>>>>>>> Stashed changes
 	<classpathentry kind="lib" path="C:/Users/usuario 1/Desktop/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
