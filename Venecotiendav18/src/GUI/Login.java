@@ -1,42 +1,24 @@
-<<<<<<< Updated upstream
-import javax.swing.*;
-
-=======
 package GUI;
 import javax.swing.*;
 import java.awt.*;
->>>>>>> Stashed changes
 import DLL.AuthController;
 import clases.Admin;
 import clases.Usuario;
 import singleton.Sesion;
 
-<<<<<<< Updated upstream
-import java.awt.*;
-import java.awt.event.*;
-
-public class LoginRegisterFrame extends JFrame {
-    private JTextField loginUserField;
-=======
 public class Login extends JFrame {
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private JTextField loginUserField;
->>>>>>> Stashed changes
     private JPasswordField loginPasswordField;
     private JComboBox<String> roleComboBox;
     private JTextField registerUserField;
     private JPasswordField registerPasswordField;
     private JTextField registerEmailField;
-
-<<<<<<< Updated upstream
-    public LoginRegisterFrame() {
-=======
     public Login() {
     	setResizable(false);
->>>>>>> Stashed changes
         setTitle("Login y Registro");
         setSize(437, 543);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -153,11 +135,6 @@ public class Login extends JFrame {
         registerPanel.add(registerButton);
 
         registerButton.addActionListener(e -> handleRegister());
-
-<<<<<<< Updated upstream
-        // Agregar paneles al tabbedPane
-=======
->>>>>>> Stashed changes
         tabbedPane.addTab("Iniciar sesión", loginPanel);
         
         JLabel lblNewLabel = new JLabel("INICIAR SESIÓN");
@@ -179,11 +156,6 @@ public class Login extends JFrame {
             JOptionPane.showMessageDialog(this, "Completa todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-<<<<<<< Updated upstream
-        // Aquí usarías tu clase Login para validar
-=======
->>>>>>> Stashed changes
         boolean loginExitoso = AuthController.login(username, password);
                
         
@@ -224,35 +196,6 @@ public class Login extends JFrame {
             JOptionPane.showMessageDialog(this, "No se pudo registrar el usuario", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-<<<<<<< Updated upstream
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(Login::new);
-    }
-}
->>>>>>> Stashed changes
