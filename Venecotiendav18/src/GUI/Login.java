@@ -3,6 +3,8 @@ import javax.swing.*;
 import java.awt.*;
 import DLL.AuthController;
 import clases.Admin;
+import clases.Empleado;
+import clases.Repartidor;
 import clases.Usuario;
 import singleton.Sesion;
 
@@ -121,7 +123,7 @@ public class Login extends JFrame {
         roleLabel.setBounds(53, 303, 80, 25);
         registerPanel.add(roleLabel);
 
-        String[] roles = {"admin", "cliente", "empleado", "repartidor"};
+        String[] roles = {"cliente", "empleado", "repartidor"};
         roleComboBox = new JComboBox<>(roles);
         roleComboBox.setBounds(153, 303, 180, 25);
         registerPanel.add(roleComboBox);
@@ -156,22 +158,36 @@ public class Login extends JFrame {
             JOptionPane.showMessageDialog(this, "Completa todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
         boolean loginExitoso = AuthController.login(username, password);
-               
-        
+
         if (loginExitoso) {
             Usuario user = Sesion.getInstancia().getUsuarioActual();
+            
             if (user instanceof Admin) {
                 AdminIterface adminFrame = new AdminIterface((Admin) user);
                 adminFrame.setVisible(true);
-                dispose(); // cerramos la ventana de login
+                dispose(); // Cerramos la ventana de login
+            } 
+            else if (user instanceof Repartidor) {
+                RepartidorInterface repartidorFrame = new RepartidorInterface((Repartidor) user);
+                repartidorFrame.setVisible(true);
+                dispose(); // Cerramos la ventana de login
             }
-        }
-                       
-        else {
+            else if (user instanceof Empleado) {
+            	EmpleadoInterface empleadoFrame = new EmpleadoInterface((Empleado) user);
+                empleadoFrame.setVisible(true);
+                dispose(); // Cerramos la ventana de login
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "Tipo de usuario no reconocido.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
             JOptionPane.showMessageDialog(this, "Credenciales incorrectas", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+
 
     private void handleRegister() {
         String username = registerUserField.getText().trim();

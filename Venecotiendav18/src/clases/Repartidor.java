@@ -1,11 +1,10 @@
+// Archivo: Repartidor.java
 package clases;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import singleton.Conexion;
 
 public class Repartidor extends Usuario {
@@ -18,72 +17,59 @@ public class Repartidor extends Usuario {
         this.numCell = numCell;
     }
 
-    public void verPedidosAsignados() {
+    public List<Pedido> verPedidosAsignados() {
+        List<Pedido> lista = new ArrayList<>();
+        try {
+            Connection conexion = Conexion.getInstance().getConnection();
+            String query = "SELECT id_pedido, productos, fk_cliente FROM pedido WHERE fk_estado_pedido = 2"; // Estado 2: Preparación
+            PreparedStatement stmt = conexion.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Pedido p = new Pedido(
+                    rs.getInt("id_pedido"),
+                    rs.getString("productos"),
+                    rs.getInt("fk_cliente")
+                );
+                lista.add(p);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al cargar pedidos: " + e.getMessage());
+        }
+        return lista;
+    }
+
+    public List<Pedido> verHistorialPedidos() {
+        List<Pedido> lista = new ArrayList<>();
         try {
             Connection conexion = Conexion.getInstance().getConnection();
             String query = "SELECT id_pedido, productos, fk_cliente FROM pedido";
             PreparedStatement stmt = conexion.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
-            StringBuilder sb = new StringBuilder("Pedidos:\n");
-            boolean hayPedidos = false;
             while (rs.next()) {
-                hayPedidos = true;
-                sb.append("ID: ").append(rs.getInt("id_pedido"))
-                  .append(", Productos: ").append(rs.getString("productos"))
-                  .append(", Cliente ID: ").append(rs.getInt("fk_cliente"))
-                  .append("\n");
-            }
-            if (hayPedidos) {
-                JOptionPane.showMessageDialog(null, sb.toString());
-            } else {
-                JOptionPane.showMessageDialog(null, "No hay pedidos asignados.");
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al cargar pedidos: " + e.getMessage());
-        }
-    }
-
-    public void verHistorialPedidos() {
-        try {
-            Connection conexion = Conexion.getInstance().getConnection();
-            String query = "SELECT id_pedido, productos FROM pedido";
-            PreparedStatement stmt = conexion.prepareStatement(query);
-            ResultSet rs = stmt.executeQuery();
-            StringBuilder sb = new StringBuilder("Historial de Pedidos:\n");
-            boolean hayPedidos = false;
-            while (rs.next()) {
-                hayPedidos = true;
-                sb.append("ID: ").append(rs.getInt("id_pedido"))
-                  .append(", Productos: ").append(rs.getString("productos"))
-                  .append("\n");
-            }
-            if (hayPedidos) {
-                JOptionPane.showMessageDialog(null, sb.toString());
-            } else {
-                JOptionPane.showMessageDialog(null, "No hay historial.");
+                Pedido p = new Pedido(
+                    rs.getInt("id_pedido"),
+                    rs.getString("productos"),
+                    rs.getInt("fk_cliente")
+                );
+                lista.add(p);
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al cargar historial: " + e.getMessage());
         }
+        return lista;
     }
 
-    public void verEstadoPedido() {
-        int idPedido = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese el ID del pedido:"));
+    public boolean finalizarPedido(int string) {
         try {
             Connection conexion = Conexion.getInstance().getConnection();
-            String query = "SELECT productos FROM pedido WHERE id_pedido = ?";
+            String query = "UPDATE pedido SET fk_estado_pedido = 3 WHERE id_pedido = ?"; // Estado 3: Entregado
             PreparedStatement stmt = conexion.prepareStatement(query);
-            stmt.setInt(1, idPedido);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                JOptionPane.showMessageDialog(null, "Estado del Pedido ID " + idPedido + ": " + rs.getString("productos"));
-            } else {
-                JOptionPane.showMessageDialog(null, "Pedido no encontrado.");
-            }
+            stmt.setInt(1, string);
+            int rows = stmt.executeUpdate();
+            return rows > 0;
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al buscar pedido: " + e.getMessage());
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Por favor, ingrese un ID válido.");
+            JOptionPane.showMessageDialog(null, "Error al finalizar el pedido: " + e.getMessage());
+            return false;
         }
     }
 
@@ -91,63 +77,24 @@ public class Repartidor extends Usuario {
         JOptionPane.showMessageDialog(null, "Mapa mostrado para " + getNombre());
     }
 
-    public void editarPerfil() {
-        String nuevoNombre = JOptionPane.showInputDialog(null, "Nuevo nombre:");
-        String nuevaPass = JOptionPane.showInputDialog(null, "Nueva contraseña:");
-        int nuevoNumCell = Integer.parseInt(JOptionPane.showInputDialog(null, "Nuevo número de celular:"));
-        if (nuevoNombre != null && nuevaPass != null && !nuevoNombre.isEmpty() && !nuevaPass.isEmpty()) {
-            try {
-                Connection conexion = Conexion.getInstance().getConnection();
-                String query = "UPDATE usuario SET nombre_usuario = ?, password = ? WHERE id_usuario = ?";
-                PreparedStatement stmt = conexion.prepareStatement(query);
-                stmt.setString(1, nuevoNombre);
-                stmt.setString(2, nuevaPass);
-                stmt.setInt(3, getIdUsuario());
-                stmt.executeUpdate();
-                setNombre(nuevoNombre);
-                setPass(nuevaPass);
-                numCell = nuevoNumCell;
-                JOptionPane.showMessageDialog(null, "Perfil actualizado.");
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, "Error al actualizar perfil: " + e.getMessage());
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Nombre y contraseña no pueden estar vacíos.");
+    public String editarPerfil(String nuevoNombre, String nuevaPass) {
+        if (nuevoNombre == null || nuevaPass == null || nuevoNombre.isEmpty() || nuevaPass.isEmpty()) {
+            return "Nombre y contraseña no pueden estar vacíos.";
         }
-    }
-
-    public void verMenu() {
-        String[] opciones = {"Ver Pedidos Asignados", "Ver Historial", "Ver Estado de Pedido", "Ver Mapa", "Editar Perfil", "Cerrar Sesión"};
-        int seleccion;
-        do {
-            seleccion = JOptionPane.showOptionDialog(null, "Menú del Repartidor", "Menú", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, opciones, opciones[0]);
-            switch (seleccion) {
-                case 0:
-                    verPedidosAsignados();
-                    break;
-                case 1:
-                    verHistorialPedidos();
-                    break;
-                case 2:
-                    verEstadoPedido();
-                    break;
-                case 3:
-                    verMapa();
-                    break;
-                case 4:
-                    editarPerfil();
-                    break;
-                case 5:
-                    cerrarSesion();
-                    JOptionPane.showMessageDialog(null, "Sesión cerrada. ¡Hasta luego!");
-                    break;
-                default:
-                    if (seleccion != JOptionPane.CLOSED_OPTION) {
-                        JOptionPane.showMessageDialog(null, "Opción no válida. Por favor, seleccione una opción.");
-                    }
-                    break;
-            }
-        } while (seleccion != 5 && seleccion != JOptionPane.CLOSED_OPTION);
+        try {
+            Connection conexion = Conexion.getInstance().getConnection();
+            String query = "UPDATE usuario SET nombre_usuario = ?, password = ? WHERE id_usuario = ?";
+            PreparedStatement stmt = conexion.prepareStatement(query);
+            stmt.setString(1, nuevoNombre);
+            stmt.setString(2, nuevaPass);
+            stmt.setInt(3, getIdUsuario());
+            stmt.executeUpdate();
+            setNombre(nuevoNombre);
+            setPass(nuevaPass);
+            return "Perfil actualizado con éxito.";
+        } catch (SQLException e) {
+            return "Error al actualizar perfil: " + e.getMessage();
+        }
     }
 
     public int getID() { return ID; }

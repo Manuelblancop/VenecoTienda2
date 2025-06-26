@@ -13,7 +13,7 @@ public class Pedido {
     private double montoPagar;
     private int idPedido;
 
-    public Pedido() {
+    public Pedido(int i, String string, int j) {
         listaProductos = new LinkedList<>();
         montoPagar = 0.0;
     }
@@ -57,4 +57,9 @@ public class Pedido {
     public String getMetodoDePago() { return metodoDePago; }
     public int getIdPedido() { return idPedido; }
     public void setIdPedido(int idPedido) { this.idPedido = idPedido; }
+
+	public String getId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

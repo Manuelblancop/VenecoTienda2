@@ -1,5 +1,5 @@
 package clases;
-
+import java.awt.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,8 +23,7 @@ public class Productos {
         this.precio = precio;
         this.categoria = categoria;
     }
-
-
+    
     // Getters y Setters
     public int getID() { return ID; }
     public void setID(int iD) { ID = iD; }
@@ -35,8 +34,11 @@ public class Productos {
     public Double getPrecio() { return precio; }
     public void setPrecio(Double precio) { this.precio = precio; }
     public String[] getCategoria() { return categoria; }
-    public void setCategoria(String[] categoria) { this.categoria = categoria; }
-
+    public void setCategoria(String[] categoria) { this.categoria = categoria; }    
+    
+    
+    
+    
     @Override
     public String toString() {
         return "ID: " + ID + ", Nombre: " + nombre + ", Descripción: " + descripcion + ", Precio: $" + precio;

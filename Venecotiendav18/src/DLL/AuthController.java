@@ -1,7 +1,9 @@
 package DLL;
+
 import clases.*;
 import singleton.Conexion;
 import singleton.Sesion;
+
 import javax.swing.*;
 import java.sql.*;
 
@@ -23,11 +25,45 @@ public class AuthController {
 
                 switch (rol) {
                     case "admin":
-                        user = new Admin(usuario, password, rol, idUsuario); break;
+                        user = new Admin(usuario, password, rol, idUsuario);
+                        break;
+
                     case "cliente":
-                        user = new Cliente(usuario, password, rol, idUsuario, 0, ""); break;
+                        user = new Cliente(usuario, password, rol, idUsuario, 0, "");
+                        break;
+
                     case "repartidor":
-                        user = new Repartidor(usuario, password, rol, idUsuario, 0); break;
+                        user = new Repartidor(usuario, password, rol, idUsuario, 0);
+                        break;
+
+                    case "empleado":
+                        // Obtener datos de tabla empleado
+                        String queryEmpleado = "SELECT id_empleado, fk_cargo FROM empleado WHERE fk_usuario = ?";
+                        PreparedStatement stmtEmpleado = conexion.prepareStatement(queryEmpleado);
+                        stmtEmpleado.setInt(1, idUsuario);
+                        ResultSet rsEmpleado = stmtEmpleado.executeQuery();
+
+                        if (rsEmpleado.next()) {
+                            int idEmpleado = rsEmpleado.getInt("id_empleado");
+                            int fkCargo = rsEmpleado.getInt("fk_cargo");
+
+                            // Obtener nombre del cargo
+                            String nombreCargo = "Empleado";
+                            String queryCargo = "SELECT nombre FROM cargo WHERE id_cargo = ?";
+                            PreparedStatement stmtCargo = conexion.prepareStatement(queryCargo);
+                            stmtCargo.setInt(1, fkCargo);
+                            ResultSet rsCargo = stmtCargo.executeQuery();
+                            if (rsCargo.next()) {
+                                nombreCargo = rsCargo.getString("nombre");
+                            }
+
+                            user = new Empleado(usuario, password, rol, idEmpleado, nombreCargo);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "No se encontró información del empleado.");
+                            return false;
+                        }
+                        break;
+
                     default:
                         user = new Usuario(usuario, password, rol);
                 }
@@ -39,6 +75,7 @@ public class AuthController {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error en login: " + e.getMessage());
         }
+
         return false;
     }
 
@@ -65,12 +102,11 @@ public class AuthController {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error en registro: " + e.getMessage());
         }
+
         return false;
     }
 
     public static String verificarRol(Connection conexion, int idUsuario) throws SQLException {
-        if (existeEnTabla(conexion, "admin", "fk_usuario", idUsuario)) return "admin";
-        if (existeEnTabla(conexion, "admin", "fk_usuario", idUsuario)) return "admin";
         if (existeEnTabla(conexion, "admin", "fk_usuario", idUsuario)) return "admin";
         if (existeEnTabla(conexion, "empleado", "fk_usuario", idUsuario)) return "empleado";
         if (existeEnTabla(conexion, "repartidor", "fk_usuario", idUsuario)) return "repartidor";
@@ -86,3 +122,4 @@ public class AuthController {
         return rs.next();
     }
 }
+
