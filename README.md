@@ -1,4 +1,6 @@
-[venecotienda.txt](https://github.com/user-attachments/files/21688657/venecotienda.txt)
+Word de la docuemtación:
+[venecotienda.docx](https://github.com/user-attachments/files/21688712/venecotienda.docx)
+
 SRS VENECOTIENDA
 
 
