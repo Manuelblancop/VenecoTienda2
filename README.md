@@ -1,4 +1,4 @@
-Word de la docuemtación:
+Word de la documentación:
 [venecotienda.docx](https://github.com/user-attachments/files/21688712/venecotienda.docx)
 
 SRS VENECOTIENDA
